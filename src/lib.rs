@@ -2,7 +2,7 @@
 
 // for Vec<f64>
 
-// [[file:~/Workspace/Programming/rust-libs/vecfx/math.org::*for%20Vec<f64>][for Vec<f64>:1]]
+// [[file:~/Workspace/Programming/rust-libs/vecfx/vecfx.note::*for%20Vec<f64>][for Vec<f64>:1]]
 #[cfg(feature = "nalgebra")]
 use nalgebra as na;
 
@@ -32,6 +32,9 @@ pub trait VecFloatMath {
 
     /// 1 / ||x||
     fn vec2norminv(&self) -> f64;
+
+    /// d = ||a-b||
+    fn vecdist(&self, other: &[f64]) -> f64;
 
     /// Minimum value of the samples.
     fn min(&self) -> f64;
@@ -99,6 +102,15 @@ impl VecFloatMath for [f64] {
     /// 1/||x||
     fn vec2norminv(&self) -> f64 {
         1.0 / self.vec2norm()
+    }
+
+    /// d = ||a-b||
+    fn vecdist(&self, other: &[f64]) -> f64 {
+        self.iter()
+            .zip(other)
+            .map(|(a, b)| (a - b).powi(2))
+            .sum::<f64>()
+            .sqrt()
     }
 
     fn min(&self) -> f64 {
@@ -169,13 +181,13 @@ fn test_vec_math_na() {
 
 // for Vec<[f64; 3]>
 
-// [[file:~/Workspace/Programming/rust-libs/vecfx/math.org::*for%20Vec<%5Bf64;%203%5D>][for Vec<[f64; 3]>:1]]
+// [[file:~/Workspace/Programming/rust-libs/vecfx/vecfx.note::*for%20Vec<%5Bf64;%203%5D>][for Vec<[f64; 3]>:1]]
 #[cfg(feature = "nalgebra")]
 /// 3xN matrix storing a list of 3D vectors
 pub type Vector3fVec =
     na::Matrix<f64, na::U3, na::Dynamic, na::MatrixVec<f64, na::U3, na::Dynamic>>;
 
-pub trait VecFloat3Math {
+pub trait VecFloat3Wrapper {
     /// Return a 1-D array, containing the elements of 3xN array
     fn ravel(&self) -> Vec<f64> {
         self.as_flat().to_vec()
@@ -192,7 +204,7 @@ pub trait VecFloat3Math {
     fn to_matrix(&self) -> Vector3fVec;
 }
 
-impl VecFloat3Math for [[f64; 3]] {
+impl VecFloat3Wrapper for [[f64; 3]] {
     /// View as a flat slice
     fn as_flat(&self) -> &[f64] {
         unsafe { ::std::slice::from_raw_parts(self.as_ptr() as *const _, self.len() * 3) }
@@ -212,7 +224,7 @@ impl VecFloat3Math for [[f64; 3]] {
 }
 
 #[test]
-fn test_vecf3_math() {
+fn test_vecf3() {
     use approx::*;
 
     let a = vec![1.0, 2.0, 3.0];
