@@ -1,0 +1,17 @@
+# cargo
+
+# [[file:~/Workspace/Programming/rust-libs/vecfx/math.org::*cargo][cargo:1]]
+[package]
+name = "vecfx"
+version = "0.0.1"
+edition = "2018"
+authors = ["Wenping Guo <ybyygu@gmail.com>"]
+
+[dependencies]
+nalgebra = {version = "0.16", optional = true}
+
+[dev-dependencies]
+
+[features]
+default = []
+# cargo:1 ends here
