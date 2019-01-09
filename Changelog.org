@@ -1,0 +1,5 @@
+# Created 2019-01-09 Wed 10:07
+#+TITLE: Changelog
+#+AUTHOR: Wenping Guo
+* [2019-01-09 Wed] v0.0.2
+- new method `vecdist_squared`
