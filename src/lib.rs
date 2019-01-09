@@ -6,6 +6,9 @@
 #[cfg(feature = "nalgebra")]
 use nalgebra as na;
 
+#[cfg(test)]
+use approx::*;
+
 /// Abstracting simple vector based math operations
 pub trait VecFloatMath {
     /// y += c*x
@@ -34,7 +37,12 @@ pub trait VecFloatMath {
     fn vec2norminv(&self) -> f64;
 
     /// d = ||a-b||
-    fn vecdist(&self, other: &[f64]) -> f64;
+    fn vecdist(&self, other: &[f64]) -> f64 {
+        self.vecdist_squared(other).sqrt()
+    }
+
+    /// d = ||a-b||^2
+    fn vecdist_squared(&self, other: &[f64]) -> f64;
 
     /// Minimum value of the samples.
     fn min(&self) -> f64;
@@ -105,12 +113,11 @@ impl VecFloatMath for [f64] {
     }
 
     /// d = ||a-b||
-    fn vecdist(&self, other: &[f64]) -> f64 {
+    fn vecdist_squared(&self, other: &[f64]) -> f64 {
         self.iter()
             .zip(other)
             .map(|(a, b)| (a - b).powi(2))
             .sum::<f64>()
-            .sqrt()
     }
 
     fn min(&self) -> f64 {
@@ -167,6 +174,12 @@ fn test_vec_math() {
     assert_eq!(-1.0, y[0]);
     assert_eq!(-1.0, y[1]);
     assert_eq!(-1.0, y[2]);
+
+    // vector distance
+    let x = [0.0, 0.0, 0.0];
+    let y = [1.0, 1.0, 1.0];
+    let r = x.vecdist(&y);
+    assert_relative_eq!(r, y.vec2norm(), epsilon=1e-4);
 }
 
 #[cfg(feature = "nalgebra")]

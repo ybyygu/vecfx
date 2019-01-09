@@ -1,9 +1,9 @@
 # cargo
 
-# [[file:~/Workspace/Programming/rust-libs/vecfx/math.org::*cargo][cargo:1]]
+# [[file:~/Workspace/Programming/rust-libs/vecfx/vecfx.note::*cargo][cargo:1]]
 [package]
 name = "vecfx"
-version = "0.0.1"
+version = "0.0.2"
 edition = "2018"
 authors = ["Wenping Guo <ybyygu@gmail.com>"]
 
